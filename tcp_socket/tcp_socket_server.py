@@ -1,7 +1,7 @@
 import socket
 
 # TCP 서버를 시작하는 함수입니다.
-def start_server(host='127.0.0.1', port=6521):
+def start_server(host='0.0.0.0', port=6521):
     # socket 객체를 생성합니다. AF_INET은 IPv4를 사용하겠다는 의미이고, SOCK_STREAM은 TCP를 사용하겠다는 의미입니다.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_server:
 
