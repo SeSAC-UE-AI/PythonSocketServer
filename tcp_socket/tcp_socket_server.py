@@ -1,4 +1,9 @@
 import socket
+import json
+import logging
+
+# 로그 파일 설정
+logging.basicConfig(filename='server.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # TCP 서버를 시작하는 함수입니다.
 def start_server(host='0.0.0.0', port=6521):
@@ -23,15 +28,24 @@ def start_server(host='0.0.0.0', port=6521):
             while True:
 
                 # 클라이언트로부터 데이터를 받습니다. 한 번에 최대 1024바이트를 읽을 수 있습니다.
-                #data = conn.recv(1024)
-                data = str(1).encode()
+                data = conn.recv(1024)
+                # data = str(1).encode()
+
+                # 받은 데이터를 JSON 형식으로 변환
+                landmarks = data.decode()
+                landmarks_list = landmarks.split(';')
+                landmarks_json = json.dumps({"landmarks": landmarks_list})
+
+                # JSON 형식의 랜드마크 정보를 로그로 기록
+                logging.info(f"Received landmarks: {landmarks_json}")
 
                 # 받은 데이터가 없으면 연결이 종료된 것으로 간주하고 루프를 종료합니다. 이 부분은 상황에 맞춰 작성
                 if not data:
                     break
 
                 # 받은 데이터를 클라이언트에게 다시 보냅니다. 변형해서 보내도록 수정합니다
-                conn.sendall(data)
+                conn.sendall(landmarks_json.encode())
+                #conn.sendall(data)
 
 # 이 스크립트가 직접 실행되었을 때만 start_server 함수를 호출합니다.
 if __name__ == "__main__":
