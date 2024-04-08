@@ -1,6 +1,7 @@
 import socket
 import logging
 import threading
+import time
 
 # 연결된 모든 클라이언트를 저장하는 리스트
 connected_clients = []
@@ -30,6 +31,7 @@ def handle_client_connection(conn, addr):
                  # 받은 데이터를 모든 클라이언트에게 전송
                 for client in connected_clients:
                     client.sendall(data)
+                    time.sleep(0.1)
 
                 #conn.sendall(data)
             except Exception as e:
@@ -37,7 +39,7 @@ def handle_client_connection(conn, addr):
                 break
 
 # TCP 서버를 시작하는 함수입니다.
-def start_server(host='0.0.0.0', port=6521):
+def start_server(host="127.0.0.1", port=6521):
     # socket 객체를 생성합니다. AF_INET은 IPv4를 사용하겠다는 의미이고, SOCK_STREAM은 TCP를 사용하겠다는 의미입니다.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_server:
         # 생성한 소켓을 주어진 호스트와 포트에 바인드(연결)합니다. 이는 서버가 해당 주소에서 클라이언트의 연결을 기다리게 합니다.
