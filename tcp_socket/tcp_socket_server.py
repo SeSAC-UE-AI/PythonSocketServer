@@ -1,5 +1,4 @@
 import socket
-import json
 import logging
 import threading
 
@@ -18,18 +17,11 @@ def handle_client_connection(conn, addr):
                 if not data:
                     break
 
-                # 받은 데이터를 JSON 형식으로 변환하여 로그로 기록
-                landmarks = data.decode()
-                landmarks_list = landmarks.split(';')
-                landmarks_dict = {"landmarks": landmarks_list}
-                landmarks_json = json.dumps(landmarks_dict)
-                logging.info(f"Received landmarks: {landmarks_json}")
+                # 받은 데이터를 로그 파일에 기록
+                logging.info(f"Received coordinates: {data.decode()}")
 
-                # 클라이언트에게 보낼 데이터를 생성
-                response_data = json.dumps({"message": "Data received successfully."})
-
-                # 생성한 데이터를 클라이언트에게 보냅니다.
-                conn.sendall(response_data.encode())
+                # 받은 데이터를 그대로 클라이언트에게 전송
+                conn.sendall(data)
             except Exception as e:
                 logging.error(f"An error occurred: {str(e)}")
                 break
