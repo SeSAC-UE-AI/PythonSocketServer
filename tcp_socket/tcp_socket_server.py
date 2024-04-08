@@ -2,6 +2,9 @@ import socket
 import logging
 import threading
 
+# 연결된 모든 클라이언트를 저장하는 리스트
+connected_clients = []
+
 # 로그 파일 설정
 logging.basicConfig(filename='server.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -9,6 +12,9 @@ logging.basicConfig(filename='server.log', level=logging.INFO, format='%(asctime
 def handle_client_connection(conn, addr):
     with conn:
         print(f"연결된 소켓은 {addr}")
+
+        # 클라이언트 연결을 리스트에 추가
+        connected_clients.append(conn)
 
         while True:
             try:
@@ -21,7 +27,11 @@ def handle_client_connection(conn, addr):
                 logging.info(f"Received coordinates: {data.decode()}")
 
                 # 받은 데이터를 그대로 클라이언트에게 전송
-                conn.sendall(data)
+                 # 받은 데이터를 모든 클라이언트에게 전송
+                for client in connected_clients:
+                    client.sendall(data)
+
+                #conn.sendall(data)
             except Exception as e:
                 logging.error(f"An error occurred: {str(e)}")
                 break
