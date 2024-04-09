@@ -31,7 +31,7 @@ def handle_client_connection(conn, addr):
                  # 받은 데이터를 모든 클라이언트에게 전송
                 for client in connected_clients:
                     client.sendall(data)
-                    time.sleep(0.1)
+                    time.sleep(0.05)
 
                 #conn.sendall(data)
             except Exception as e:
